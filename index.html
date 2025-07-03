@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LockLeaf - Password Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #8abbe2, #ebedee);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 26px;
+      color: #4a4a4a;
+    }
+
+    p.subtitle {
+      font-size: 15px;
+      color: #777;
+      margin-top: -6px;
+    }
+
+    button {
+      background-color: #7c3aed;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #6d28d9;
+    }
+
+    .output {
+      margin-top: 25px;
+    }
+
+    .label {
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 15px;
+    }
+
+    .code-box {
+      font-family: monospace;
+      font-size: 20px;
+      background: #f3f4f6;
+      padding: 10px 16px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 6px;
+      user-select: all;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      color: #7c3aed;
+      margin-left: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .toast {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 LockLeaf</h2>
+    <p class="subtitle">Generate a unique but secure password 🌸</p>
+    <button onclick="generatePassword()">Generate Password</button>
+
+    <div class="output">
+      <div class="label">Password:</div>
+      <div>
+        <span class="code-box" id="password">--------</span>
+        <button class="copy-btn" onclick="copyPassword()">📋</button>
+      </div>
+
+      <div class="label">Hint:</div>
+      <div class="code-box" id="hint">--------</div>
+
+      <div class="toast" id="toast">Copied to clipboard!</div>
+    </div>
+  </div>
+
+<script>
+  function generatePassword() {
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const number = '0123456789';
+    const symbol = '!@#$%^&*()_+{}[]?<>';
+    const allChars = lower + upper + number + symbol;
+
+    let password = '';
+    for (let i = 0; i < 8; i++) {
+      password += allChars[Math.floor(Math.random() * allChars.length)];
+    }
+
+    const hint = shortHint(password);
+    document.getElementById('password').innerText = password;
+    document.getElementById('hint').innerText = hint;
+  }
+
+  function getCharType(char) {
+    if (/[0-9]/.test(char)) return "num";
+    if (/[^A-Za-z0-9]/.test(char)) return "sym";
+    if (/[A-Z]/.test(char)) return "cap";
+    return "low";
+  }
+
+  function shortHint(pwd) {
+    return `${pwd[0]} start, ${getCharType(pwd[3])} mid, ${pwd[7]} end`;
+  }
+
+  function copyPassword() {
+    const pwd = document.getElementById("password").innerText;
+    if (pwd !== '--------') {
+      navigator.clipboard.writeText(pwd);
+      const toast = document.getElementById("toast");
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2000);
+    }
+  }
+</script>
+
+
+</body>
+</html>
